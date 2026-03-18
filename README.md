@@ -8,7 +8,7 @@
 
 This lab simulates a realistic backend workload: a .NET 10 API talking to a PostgreSQL 18 database, so you can explore Dynatrace observability features in a live, instrumented environment. The idea is to have something meaningful to look at in Dynatrace: real queries, real lock contention, real traces, and real metrics, without spending time building an app from scratch.
 
-`setup-lab.sh` automates the entire infrastructure side of that. It provisions the database, seeds it with data, configures logging and the monitoring user, scaffolds and builds the API, and opens the right firewall ports. The whole thing is designed to be stood up in under 10 minutes on a fresh **Rocky Linux 10** VPS and destroyed completely at the end of the session.
+`setup-lab.sh` automates the entire infrastructure side of that. It provisions the database, seeds it with data, configures logging and the monitoring user, scaffolds and builds the API, and opens the right firewall ports. The whole thing is designed to be stood up in under 10 minutes on a fresh **Rocky Linux 10** VPS (cpx32) and destroyed completely at the end of the session.
 
 **This script is not a Dynatrace tutorial.** It does not install or configure Dynatrace for you. Before the lab makes sense, you will need to have already set up:
 
