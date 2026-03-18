@@ -8,7 +8,7 @@
 
 This lab simulates a realistic backend workload: a .NET 10 API talking to a PostgreSQL 18 database, so you can explore Dynatrace observability features in a live, instrumented environment. The idea is to have something meaningful to look at in Dynatrace: real queries, real lock contention, real traces, and real metrics, without spending time building an app from scratch.
 
-`setup-lab.sh` automates the entire infrastructure side of that. It provisions the database, seeds it with data, configures logging and the monitoring user, scaffolds and builds the API, and opens the right firewall ports. The whole thing is designed to be stood up in under 10 minutes on a fresh **Rocky Linux 10** VPS (cpx32) and destroyed completely at the end of the session.
+`setup-lab.sh` automates the entire infrastructure side of that. It provisions the database, seeds it with data, configures logging and the monitoring user, scaffolds and builds the API, and opens the right firewall ports. The whole thing is designed to be stood up in under 10 minutes on a fresh **Rocky Linux 10** VPS and destroyed completely at the end of the session.
 
 **This script is not a Dynatrace tutorial.** It does not install or configure Dynatrace for you. Before the lab makes sense, you will need to have already set up:
 
@@ -52,6 +52,8 @@ Dependencies installed automatically: **Npgsql** + **Dapper**.
 
 The application name is set to `DynatraceLabApi` in the connection string so queries are identifiable in Dynatrace's database monitoring views.
 
+The API is registered as a system service (`dynatrace-lab-api.service`) and started automatically at the end of the script. It will restart on failure and come back up after a reboot without any manual intervention.
+
 ### inject-lock.sh
 
 A helper script placed at `~/inject-lock.sh` that acquires an `ACCESS EXCLUSIVE` lock on the `orders` table for 10 seconds, useful for demonstrating lock contention detection in Dynatrace.
@@ -86,20 +88,18 @@ You will be prompted for:
 
 ## Post-Setup Manual Steps
 
-### 1. Start the API
+### 1. Verify the API is running
+
+The API starts automatically as a systemd service. To confirm it is up:
 
 ```bash
-DB_PASSWORD='your_password' dotnet run --project ~/dynatrace-lab-api/DynatraceLabApi
-```
-
-### 2. Test the endpoints
-
-```bash
+sudo systemctl status dynatrace-lab-api.service
 curl http://localhost:5000/health
 curl http://localhost:5000/products
 curl -X POST http://localhost:5000/orders \
   -H 'Content-Type: application/json' \
   -d '{"productId": 1, "quantity": 2}'
+curl http://localhost:5000/orders/1
 ```
 
 ### 3. Install Dynatrace OneAgent
