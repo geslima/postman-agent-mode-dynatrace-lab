@@ -67,7 +67,7 @@ A helper script placed at `~/inject-lock.sh` that acquires an `ACCESS EXCLUSIVE`
 
 ## Prerequisites
 
-- Rocky Linux 10 (the Microsoft `.NET` repository is configured for `rhel/10`)
+- Rocky Linux 10 x86 (the Microsoft `.NET` repository is configured for `rhel/10`)
 - `sudo` privileges
 - Internet access (to pull packages and the Postgres image)
 
